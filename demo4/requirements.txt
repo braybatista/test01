@@ -1,3 +1,2 @@
-licensecheck
 pip_licenses
 xmltodict==0.13.0
