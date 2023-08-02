@@ -12,9 +12,9 @@ plugins {
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
-java {
-	sourceCompatibility = '1.8'
-}
+// java {
+// 	sourceCompatibility = '17'
+// }
 
 licenseReport {
     // By default this plugin will collect the union of all licenses from 
