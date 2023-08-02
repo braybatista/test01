@@ -1,3 +1,7 @@
+import com.github.jk1.license.render.*
+import com.github.jk1.license.importer.*
+import com.github.jk1.license.filter.*
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.2'
