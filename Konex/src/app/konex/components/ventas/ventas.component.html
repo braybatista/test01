@@ -1,0 +1,64 @@
+<br>
+<div class="container">
+    <div class="row">
+        <div class="row">
+            <div class="input-field col s6">
+                <input type="date" class="validate" id="fechaInicio" [(ngModel)]="fechaInicio" autocomplete="off" required>
+                <label class="active" for="fechaInicio">Fecha Inicio</label>
+            </div>
+            <div class="input-field col s6">
+                <input type="date" class="validate" id="fechaFin" [(ngModel)]="fechaFin" autocomplete="off" required>
+                <label class="active" for="fechaFin">Fecha Fin</label>
+            </div>
+        </div>
+        <div class="row">
+            <button class="btn modal-trigger waves-effect waves-light tooltipped blue darken-4" type="button" name="action" (click)="consultarVentas()">
+                Consultar
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <h4>Lista de Transaccions</h4>
+        <table class="striped">
+            <thead>
+                <tr class="styled-thead">
+                    <td><b>Fecha</b></td>
+                    <td><b>medicamento</b></td>
+                    <td><b>Cantidad</b></td>
+                    <td><b>Valor Unitario</b></td>
+                    <td><b>Valor Total</b></td>
+                </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let venta of ventas">  
+                <td>{{venta.fechaTransaccion | dateTimeFormat}}</td>
+                <td>{{venta.medicamento.nombre}}</td>
+                <td>{{venta.cantidad}}</td>
+                <td>{{venta.valorUnitario | currency}}</td>
+                <td>{{venta.valorTotal | currency}}</td>
+              </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col s2">
+                <label for="status">Rows</label>
+                <select class="browser-default" id="rows" [(ngModel)]="numberRows" (change)="changeRowsSelect()" autocomplete="off">
+                    <option value=10>10</option>
+                    <option value=20>20</option>
+                    <option value=50>50</option>
+                    <option value=100>50</option>
+                </select>
+            </div>
+            <div class="col s1 offset-s9">
+                <label for="status">Page</label>
+                <select class="browser-default" id="page" [(ngModel)]="numberPage" (change)="changePageSelect()" autocomplete="off">
+                    <option 
+                    *ngFor="let page of pages"
+                    value={{page}}
+                    >{{page}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>

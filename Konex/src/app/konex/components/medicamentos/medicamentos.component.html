@@ -1,0 +1,145 @@
+<br>
+<div class="container">
+    <div class="row">
+        <div class="input-field col s2">
+            <button class="btn modal-trigger waves-effect waves-light tooltipped blue darken-4" data-position="left" data-delay="25" data-tooltip="Agregar" data-target="modal1" type="button" name="action" (click)="limpiarMedicamento();">
+                <i class="large material-icons">add</i>
+            </button>
+        </div>
+        <div class="input-field col s3 offset-s7">
+            <input type="text" 
+            id="search" 
+            [(ngModel)]="filterargs.nombre" 
+            /> 
+            <label class="active" for="search">search</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <h4>Lista de Medicamentos</h4>
+        <table class="striped">
+            <thead>
+              <tr class="styled-thead">
+                <td><b>Nombre</b></td>
+                <td><b>Laboratorio</b></td>
+                <td><b>Fecha de Fabricacion</b></td>
+                <td><b>Fecha de Vencimiento</b></td>
+                <td><b>Cantidad en Stock</b></td>
+                <td><b>Valor Unitario</b></td>
+                <!-- <td><b>NUM VALIDACION</b></td> -->
+                <td colspan="2"></td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let medicamento of medicamentos | slice: numRowsIni : numRowsEnd | medicamentofilter: filterargs">
+                <td>{{medicamento.nombre}}</td>
+                <td>{{medicamento.laboratorio}}</td>
+                <td>{{medicamento.fechaFabricacion | dateFormat}}</td>
+                <td>{{medicamento.fechaVencimiento | dateFormat}}</td>
+                <td>{{medicamento.stock}}</td>
+                <td>{{medicamento.valorUnitario | currency }}</td>
+                <!-- <td>{{medicamento.taNumValidacion}}</td> -->
+                <td>
+                    <a href="javascript:void(0)" class="table-btn modal-trigger edit-btn waves-effect waves-green btn green darken-4" data-target="modal-enrolamiento" (click)="limpiarMedicamento();cargarMedicamento(medicamento)">Venta</a>
+                    <a href="javascript:void(0)" class="table-btn edit-btn modal-trigger waves-effect waves-green btn tooltipped blue darken-4" data-position="top" data-delay="25" data-tooltip="Editar" data-target="modal1" (click)="cargarMedicamento(medicamento);"><i class="large material-icons">border_color</i></a>
+                    <a href="javascript:void(0)" class="table-btn delete-btn waves-effect waves-red btn red darken-4" (click)="eliminarMedicamento(medicamento);"><i class="large material-icons">block</i></a>
+                </td>
+              </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col s2">
+                <label for="status">Rows</label>
+                <select class="browser-default" id="rows" [(ngModel)]="numberRows" (change)="changeRowsSelect()" autocomplete="off">
+                    <option value=10>10</option>
+                    <option value=20>20</option>
+                    <option value=50>50</option>
+                    <option value=100>50</option>
+                </select>
+            </div>
+            <div class="col s1 offset-s9">
+                <label for="status">Page</label>
+                <select class="browser-default" id="page" [(ngModel)]="numberPage" (change)="changePageSelect()" autocomplete="off">
+                    <option 
+                    *ngFor="let page of pages"
+                    value={{page}}
+                    >{{page}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Structure -->
+<div id="modal1" class="modal">
+    <div class="row">
+        <div class="input-field col s6">
+            <h4>Crear Medicamento</h4>
+        </div>
+    </div>
+    <form [formGroup]="modalCreateForm" novalidate>
+        <div class="modal-content">
+            <div class="row">
+                <div class="input-field col s6">
+                    <input type="text" id="nombre" name="nombre"  formControlName="nombre" [(ngModel)]="selectedMedicamento.nombre" class="validate" pattern="[A-Za-z0-9 ]{5,45}" maxlength="45" autocomplete="off" required>
+                    <label class="active" for="nombre">Nombre</label>
+                </div>
+                <div class="input-field col s6">
+                    <input type="text" id="laboratorio" name="laboratorio"  formControlName="laboratorio" [(ngModel)]="selectedMedicamento.laboratorio" class="validate" pattern="[A-Za-z0-9 ]{5,45}" maxlength="45" autocomplete="off" required>
+                    <label class="active" for="laboratorio">Laboratorio</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <input type="date" class="validate" id="fechaFabricacion" formControlName="fechaFabricacion" [(ngModel)]="selectedMedicamento.fechaFabricacion" autocomplete="off" required>
+                    <label class="active" for="fechaFabricacion">Fecha Fabricacion</label>
+                </div>
+                <div class="input-field col s6">
+                    <input type="date" class="validate" id="fechaVencimiento" formControlName="fechaVencimiento" [(ngModel)]="selectedMedicamento.fechaVencimiento" autocomplete="off" required>
+                    <label class="active" for="fechaVencimiento">Fecha Vencimiento</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <input type="text" id="stock" formControlName="stock" [(ngModel)]="selectedMedicamento.stock" class="validate" pattern="[0-9]{0,10}" minlength="0" maxlength="10" autocomplete="off" required>
+                    <label class="active" for="stock">Cantidad en Stock</label>
+                </div>
+                <div class="input-field col s6">
+                    <input type="text" id="valorUnitario" formControlName="valorUnitario" [(ngModel)]="selectedMedicamento.valorUnitario" class="validate" pattern="[0-9]{1,10}(\.\d{0,2})?" minlength="3" maxlength="12" autocomplete="off" required>
+                    <label class="active" for="valorUnitario">Valor Unitario</label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:void(0)" class="close-btn modal-close waves-effect waves-red btn red darken-4 white-text" (click)="limpiarMedicamento()">Cerrar</a>
+            <button type="button" class="modal-close waves-effect waves-green btn blue darken-4" (click)="mergeMedicamento(selectedMedicamento)" [disabled]="modalCreateForm.status === 'INVALID'">Guardar</button>
+        </div>
+    </form>
+</div>
+
+<!-- Modal Structure -->
+<div id="modal-enrolamiento" class="modal">
+    <div class="row">
+        <div class="input-field col s6">
+            <h4>Enrolar Medicamento</h4>
+        </div>
+    </div>
+    <form [formGroup]="modalEnroleForm" novalidate>
+        <div class="modal-content">
+            <div class="row">
+                <div class="input-field col s6">
+                    <input type="text" id="cantidad" formControlName="cantidad" [(ngModel)]="venta.cantidad" class="validate" pattern="[0-9]{0,10}" minlength="0" maxlength="10" autocomplete="off" required>
+                    <label class="active" for="cantidad">Cantidad en Stock</label>
+                </div>
+                <div class="input-field col s6">
+                    <label type="text" id="valorTotal">{{(selectedMedicamento.valorUnitario ? selectedMedicamento.valorUnitario : 0) * venta.cantidad | currency}}</label>
+                    <label class="active" for="valorTotal">ValorTotal</label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:void(0)" class="close-btn modal-close waves-effect waves-red btn red darken-4 white-text" (click)="limpiarMedicamento()">Cerrar</a>
+            <button type="button" class="modal-close waves-effect waves-green btn blue darken-4" (click)="realizarVenta(selectedMedicamento, venta)" [disabled]="modalEnroleForm.status === 'INVALID'">Guardar</button>
+        </div>
+    </form>
+</div>
